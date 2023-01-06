@@ -18,7 +18,6 @@ export default Button;
 
 interface StyleProps {
   type?: string;
-  title?: string;
 }
 
 interface StyleSheetType {
