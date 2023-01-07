@@ -7,14 +7,19 @@ import {
   ViewStyle,
 } from 'react-native';
 import {colors} from '../../../utils';
+import IconOnly from './IconOnly';
 
 interface ButtonProps {
   type?: string;
   title?: string;
   onPress?: any;
+  icon?: string;
 }
 
-const Button: FC<ButtonProps> = ({type, title, onPress}) => {
+const Button: FC<ButtonProps> = ({type, title, onPress, icon}) => {
+  if (type === 'icon-only') {
+    return <IconOnly icon={icon} onPress={onPress} />;
+  }
   return (
     <TouchableOpacity style={{...styles({type}).container}} onPress={onPress}>
       <Text style={{...styles({type}).text}}>{title}</Text>

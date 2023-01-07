@@ -11,7 +11,7 @@ export const colors = {
   white: 'white',
   black: 'black',
   text: {
-    default: mainColors.dark1,
+    primary: mainColors.dark1,
     secondary: mainColors.grey1,
   },
   button: {
