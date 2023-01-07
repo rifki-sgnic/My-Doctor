@@ -2,7 +2,15 @@ import {StyleSheet, Text, TextStyle, View} from 'react-native';
 import React from 'react';
 import {colors, fonts} from '../../../utils';
 
-const Link = ({title, size, align}: {title: any; size?: any; align?: any}) => {
+const Link = ({
+  title,
+  size,
+  align,
+}: {
+  title: any;
+  size?: any;
+  align?: string;
+}) => {
   return (
     <View>
       <Text style={{...styles({size, align}).text}}>{title}</Text>
