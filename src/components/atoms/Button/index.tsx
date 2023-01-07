@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ViewStyle,
 } from 'react-native';
-import {colors} from '../../../utils';
+import {colors, fonts} from '../../../utils';
 import IconOnly from './IconOnly';
 
 interface ButtonProps {
@@ -52,7 +52,7 @@ const styles: StylesFunctionProps = ({type}) =>
     },
     text: {
       fontSize: 18,
-      fontFamily: 'Nunito-SemiBold',
+      fontFamily: fonts.primary[600],
       textAlign: 'center',
       color:
         type === 'secondary'
