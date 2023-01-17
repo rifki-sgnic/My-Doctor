@@ -12,7 +12,7 @@ interface HeaderProps {
 
 const Header = ({onPress, title, type}: HeaderProps) => {
   if (type === 'dark-profile') {
-    return <DarkProfile />;
+    return <DarkProfile onPress={onPress} />;
   }
   return (
     <View style={{...styles({type}).container}}>

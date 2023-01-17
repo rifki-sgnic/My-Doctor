@@ -1,12 +1,12 @@
-import React, {FC} from 'react';
+import React from 'react';
 import {View} from 'react-native';
 
 interface GapProps {
-  height?: any;
-  width?: any;
+  height?: number;
+  width?: number;
 }
 
-const Gap: FC<GapProps> = ({height, width}) => {
+const Gap = ({height, width}: GapProps) => {
   return <View style={{height: height, width: width}} />;
 };
 

@@ -1,20 +1,40 @@
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {IconNext} from '../../../assets';
+import {
+  IconEditProfile,
+  IconHelp,
+  IconLanguage,
+  IconNext,
+  IconRate,
+} from '../../../assets';
 import {colors, fonts} from '../../../utils';
 
-interface ListDoctorProps {
-  profile: any;
+interface ListProps {
+  profile?: any;
   name: string;
   desc: string;
-  type: string;
+  type?: string;
+  icon?: any;
   onPress: () => void;
 }
 
-const ListDoctor = ({profile, name, desc, type, onPress}: ListDoctorProps) => {
+const List = ({profile, name, desc, type, icon, onPress}: ListProps) => {
+  const Icon = () => {
+    return icon === 'edit-profile' ? (
+      <IconEditProfile />
+    ) : icon === 'language' ? (
+      <IconLanguage />
+    ) : icon === 'rate' ? (
+      <IconRate />
+    ) : icon === 'help' ? (
+      <IconHelp />
+    ) : (
+      <IconEditProfile />
+    );
+  };
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
-      <Image source={profile} style={styles.avatar} />
+      {icon ? <Icon /> : <Image source={profile} style={styles.avatar} />}
       <View style={styles.content}>
         <Text style={styles.name}>{name}</Text>
         <Text style={styles.desc}>{desc}</Text>
@@ -24,7 +44,7 @@ const ListDoctor = ({profile, name, desc, type, onPress}: ListDoctorProps) => {
   );
 };
 
-export default ListDoctor;
+export default List;
 
 const styles = StyleSheet.create({
   container: {
@@ -37,12 +57,12 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+    marginLeft: 16,
   },
   avatar: {
     width: 46,
     height: 46,
     borderRadius: 46 / 2,
-    marginRight: 12,
   },
   name: {
     fontSize: 16,
