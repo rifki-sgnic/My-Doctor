@@ -7,6 +7,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import {colors, fonts} from '../../../utils';
+import BtnIconSend from './BtnIconSend';
 import IconOnly from './IconOnly';
 
 interface ButtonProps {
@@ -14,9 +15,13 @@ interface ButtonProps {
   title?: string;
   onPress?: any;
   icon?: string;
+  disable?: boolean;
 }
 
-const Button: FC<ButtonProps> = ({type, title, onPress, icon}) => {
+const Button: FC<ButtonProps> = ({type, title, onPress, icon, disable}) => {
+  if (type === 'btn-icon-send') {
+    return <BtnIconSend disable={disable} />;
+  }
   if (type === 'icon-only') {
     return <IconOnly icon={icon} onPress={onPress} />;
   }
