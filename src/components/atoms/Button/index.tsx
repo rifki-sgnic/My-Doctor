@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React from 'react';
 import {
   StyleSheet,
   Text,
@@ -18,7 +18,7 @@ interface ButtonProps {
   disable?: boolean;
 }
 
-const Button: FC<ButtonProps> = ({type, title, onPress, icon, disable}) => {
+const Button = ({type, title, onPress, icon, disable}: ButtonProps) => {
   if (type === 'btn-icon-send') {
     return <BtnIconSend disable={disable} />;
   }
