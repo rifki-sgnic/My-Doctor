@@ -1,30 +1,63 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
 import {Button, Gap, Header, Link} from '../../components';
-import {colors, fonts} from '../../utils';
+import {colors, fonts, storeData} from '../../utils';
 import {IconAddPhoto, IconRemovePhoto, ILNullPhoto} from '../../assets';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {showMessage} from 'react-native-flash-message';
+import {ref, update} from 'firebase/database';
+import {db} from '../../config';
 
-const UploadPhoto = ({navigation}: {navigation: any}) => {
+interface UploadPhotoProps {
+  navigation: any;
+  route: any;
+}
+
+const UploadPhoto = ({navigation, route}: UploadPhotoProps) => {
+  const {fullName, profession, uid} = route.params;
   const [hasPhoto, setHasPhoto] = useState(false);
   const [photo, setPhoto] = useState(ILNullPhoto);
+  const [dataImg, setDataImg] = useState('');
+
   const getImage = () => {
-    launchImageLibrary({mediaType: 'photo'}, (response: any) => {
-      console.log(response);
-      if (response.didCancel || response.error) {
-        showMessage({
-          message: 'Gagal memilih foto',
-          type: 'danger',
-          backgroundColor: colors.error,
-          color: colors.white,
-        });
-      } else {
-        const src = {uri: response.assets[0].uri};
-        setPhoto(src);
-        setHasPhoto(true);
-      }
-    });
+    launchImageLibrary(
+      {
+        includeBase64: true,
+        mediaType: 'photo',
+        quality: 0.5,
+        maxWidth: 200,
+        maxHeight: 200,
+      },
+      (response: any) => {
+        console.log(response);
+        if (response.didCancel || response.error) {
+          showMessage({
+            message: 'Gagal memilih foto',
+            type: 'danger',
+            backgroundColor: colors.error,
+            color: colors.white,
+          });
+        } else {
+          setDataImg(
+            `data:${response.assets[0].type};base64, ${response.assets[0].base64}`,
+          );
+          const src = {uri: response.assets[0].uri};
+          setPhoto(src);
+          setHasPhoto(true);
+        }
+      },
+    );
+  };
+
+  const UploadAndContinue = () => {
+    update(ref(db, 'users/' + uid + '/'), {photo: dataImg});
+
+    const data = route.params;
+    data.photo = dataImg;
+
+    storeData('user', data);
+
+    navigation.replace('MainApp');
   };
   return (
     <View style={styles.page}>
@@ -36,14 +69,14 @@ const UploadPhoto = ({navigation}: {navigation: any}) => {
             {!hasPhoto && <IconAddPhoto style={styles.addPhoto} />}
             {hasPhoto && <IconRemovePhoto style={styles.addPhoto} />}
           </TouchableOpacity>
-          <Text style={styles.name}>Username</Text>
-          <Text style={styles.profession}>Profession</Text>
+          <Text style={styles.name}>{fullName}</Text>
+          <Text style={styles.profession}>{profession}</Text>
         </View>
         <View>
           <Button
             disable={!hasPhoto}
             title="Upload and Continue"
-            onPress={() => navigation.replace('MainApp')}
+            onPress={UploadAndContinue}
           />
           <Gap height={30} />
           <Link

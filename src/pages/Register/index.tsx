@@ -29,12 +29,13 @@ const Register = ({navigation}: {navigation: any}) => {
           fullName: form.fullName,
           profession: form.profession,
           email: form.email,
+          uid: success.user.uid,
         };
         // Save localStorage
         storeData('user', data);
         // Save Firebase
         set(ref(db, 'users/' + success.user.uid + '/'), data);
-        navigation.navigate('UploadPhoto');
+        navigation.navigate('UploadPhoto', data);
       })
       .catch(error => {
         const errorMessage = error.message;
