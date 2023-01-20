@@ -1,10 +1,11 @@
+import {createUserWithEmailAndPassword} from 'firebase/auth';
+import {ref, set} from 'firebase/database';
 import React, {useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
+import {showMessage} from 'react-native-flash-message';
 import {Button, Gap, Header, Input, Loading} from '../../components';
-import {Firebase} from '../../config';
-import {colors, useForm} from '../../utils';
-import {createUserWithEmailAndPassword, getAuth} from 'firebase/auth';
-import {showMessage, hideMessage} from 'react-native-flash-message';
+import {auth, db} from '../../config';
+import {colors, storeData, useForm} from '../../utils';
 
 const Register = ({navigation}: {navigation: any}) => {
   const [form, setForm] = useForm({
@@ -20,12 +21,20 @@ const Register = ({navigation}: {navigation: any}) => {
     console.log(form);
     setLoading(true);
 
-    const auth = getAuth(Firebase);
     createUserWithEmailAndPassword(auth, form.email, form.password)
       .then(success => {
         setLoading(false);
         setForm('reset');
-        console.log(success);
+        const data = {
+          fullName: form.fullName,
+          profession: form.profession,
+          email: form.email,
+        };
+        // Save localStorage
+        storeData('user', data);
+        // Save Firebase
+        set(ref(db, 'users/' + success.user.uid + '/'), data);
+        navigation.navigate('UploadPhoto');
       })
       .catch(error => {
         const errorMessage = error.message;
@@ -37,8 +46,6 @@ const Register = ({navigation}: {navigation: any}) => {
           type: 'danger',
         });
       });
-
-    // navigation.navigate('UploadPhoto');
   };
   return (
     <>

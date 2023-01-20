@@ -4,6 +4,7 @@ import {
   Text,
   TextStyle,
   TouchableOpacity,
+  View,
   ViewStyle,
 } from 'react-native';
 import {colors, fonts} from '../../../utils';
@@ -25,6 +26,13 @@ const Button = ({type, title, onPress, icon, disable}: ButtonProps) => {
   if (type === 'icon-only') {
     return <IconOnly icon={icon} onPress={onPress} />;
   }
+  if (disable) {
+    return (
+      <View style={{...styles({}).disabledBtn}}>
+        <Text style={{...styles({}).disabledText}}>{title}</Text>
+      </View>
+    );
+  }
   return (
     <TouchableOpacity style={{...styles({type}).container}} onPress={onPress}>
       <Text style={{...styles({type}).text}}>{title}</Text>
@@ -41,6 +49,8 @@ interface StyleProps {
 interface StyleSheetType {
   container: ViewStyle;
   text: TextStyle;
+  disabledBtn: ViewStyle;
+  disabledText: TextStyle;
 }
 
 type StylesFunctionProps = (props: StyleProps) => StyleSheetType;
@@ -63,5 +73,16 @@ const styles: StylesFunctionProps = ({type}) =>
         type === 'secondary'
           ? colors.button.secondary.text
           : colors.button.primary.text,
+    },
+    disabledBtn: {
+      backgroundColor: colors.button.disable.background,
+      borderRadius: 10,
+      paddingVertical: 10,
+    },
+    disabledText: {
+      fontSize: 18,
+      fontFamily: fonts.primary[600],
+      textAlign: 'center',
+      color: colors.button.disable.text,
     },
   });
