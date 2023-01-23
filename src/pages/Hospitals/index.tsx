@@ -1,15 +1,26 @@
+import {child, get, ref} from 'firebase/database';
+import React, {useEffect, useState} from 'react';
 import {ImageBackground, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
-import {
-  DummyHospital1,
-  DummyHospital2,
-  DummyHospital3,
-  ILCoverHospital,
-} from '../../assets';
-import {colors, fonts} from '../../utils';
+import {ILCoverHospital} from '../../assets';
 import {ListHospital} from '../../components';
+import {db} from '../../config';
+import {colors, fonts, showError} from '../../utils';
 
 const Hospitals = () => {
+  const [hospitals, setHospitals] = useState([]);
+  useEffect(() => {
+    const dbRef = ref(db);
+    get(child(dbRef, 'hospitals/'))
+      .then(snapshot => {
+        if (snapshot.exists()) {
+          setHospitals(snapshot.val());
+        }
+      })
+      .catch(err => {
+        showError(err);
+      });
+  }, []);
+
   return (
     <View style={styles.page}>
       <ImageBackground source={ILCoverHospital} style={styles.background}>
@@ -17,24 +28,17 @@ const Hospitals = () => {
         <Text style={styles.desc}>3 Tersedia</Text>
       </ImageBackground>
       <View style={styles.content}>
-        <ListHospital
-          type="Rumah Sakit"
-          name="Citra Bunga Merdeka"
-          address="Jln. Surya Sejahtera 20"
-          pic={DummyHospital1}
-        />
-        <ListHospital
-          type="Rumah Sakit Anak"
-          name="Happy Family & Kids"
-          address="Jln. Surya Sejahtera 20"
-          pic={DummyHospital2}
-        />
-        <ListHospital
-          type="Rumah Sakit Jiwa"
-          name="Tingkatan Paling Atas"
-          address="Jln. Surya Sejahtera 20"
-          pic={DummyHospital3}
-        />
+        {hospitals.map((item: any) => {
+          return (
+            <ListHospital
+              key={item.id}
+              type={item.type}
+              name={item.name}
+              address={item.address}
+              pic={{uri: item.image}}
+            />
+          );
+        })}
       </View>
     </View>
   );

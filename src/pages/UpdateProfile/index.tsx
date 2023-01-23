@@ -8,7 +8,7 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import {ILNullPhoto} from '../../assets';
 import {Button, Gap, Header, Input, Profile} from '../../components';
 import {auth, db} from '../../config';
-import {colors, getData, showSuccess, storeData} from '../../utils';
+import {colors, getData, showError, showSuccess, storeData} from '../../utils';
 
 const UpdateProfile = ({navigation}: any) => {
   const [profile, setProfile] = useState({
@@ -70,12 +70,7 @@ const UpdateProfile = ({navigation}: any) => {
     console.log('newPass: ', password);
     if (password.length > 0) {
       if (password.length < 6) {
-        showMessage({
-          message: 'Password harus memiliki 6 karakter',
-          type: 'danger',
-          backgroundColor: colors.error,
-          color: colors.white,
-        });
+        showError('Password harus memiliki 6 karakter');
       } else {
         updateUserPassword();
         updateDataProfile();
@@ -90,12 +85,7 @@ const UpdateProfile = ({navigation}: any) => {
     if (user) {
       updatePassword(user, password).catch(err => {
         console.log(err);
-        showMessage({
-          message: 'Gagal melakukan update password',
-          type: 'danger',
-          backgroundColor: colors.error,
-          color: colors.white,
-        });
+        showError('Gagal melakukan update password');
       });
     }
   };
@@ -120,12 +110,7 @@ const UpdateProfile = ({navigation}: any) => {
       })
       .catch(err => {
         console.log('error: ', err);
-        showMessage({
-          message: err,
-          backgroundColor: colors.error,
-          color: colors.white,
-          type: 'danger',
-        });
+        showError(err);
       });
   };
 
