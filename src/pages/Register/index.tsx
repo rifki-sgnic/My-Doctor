@@ -2,10 +2,9 @@ import {createUserWithEmailAndPassword} from 'firebase/auth';
 import {ref, set} from 'firebase/database';
 import React, {useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import {showMessage} from 'react-native-flash-message';
 import {Button, Gap, Header, Input, Loading} from '../../components';
 import {auth, db} from '../../config';
-import {colors, storeData, useForm} from '../../utils';
+import {colors, showError, storeData, useForm} from '../../utils';
 
 const Register = ({navigation}: {navigation: any}) => {
   const [form, setForm] = useForm({
@@ -40,12 +39,7 @@ const Register = ({navigation}: {navigation: any}) => {
       .catch(error => {
         const errorMessage = error.message;
         setLoading(false);
-        showMessage({
-          message: errorMessage,
-          backgroundColor: colors.error,
-          color: colors.white,
-          type: 'danger',
-        });
+        showError(errorMessage);
       });
   };
   return (

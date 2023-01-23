@@ -1,14 +1,67 @@
-import React from 'react';
+import {CommonActions, useFocusEffect} from '@react-navigation/native';
+import {signOut} from 'firebase/auth';
+import React, {useCallback, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
+import {ILNullPhoto} from '../../assets';
 import {Gap, Header, List, Profile} from '../../components';
-import {colors} from '../../utils';
+import {auth} from '../../config';
+import {colors, getData, showError, showSuccess} from '../../utils';
 
 const UserProfile = ({navigation}: any) => {
+  const [profile, setProfile] = useState({
+    fullName: '',
+    profession: '',
+    photo: ILNullPhoto,
+  });
+
+  useFocusEffect(
+    useCallback(() => {
+      const unsubscribe = getData('user').then(res => {
+        const data = res;
+        data.photo = {uri: res.photo};
+        setProfile(data);
+      });
+
+      return () => unsubscribe;
+    }, []),
+  );
+
+  // useEffect(() => {
+  //   getData('user').then(res => {
+  //     const data = res;
+  //     data.photo = {uri: res.photo};
+  //     setProfile(data);
+  //   });
+  // }, []);
+
+  const logOut = () => {
+    signOut(auth)
+      .then(() => {
+        showSuccess('Berhasil Sign Out!');
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 1,
+            routes: [{name: 'GetStarted'}],
+          }),
+        );
+        // navigation.replace('GetStarted');
+      })
+      .catch(err => {
+        showError(err.message);
+      });
+  };
+
   return (
     <View style={styles.page}>
       <Header title="Profile" onPress={() => navigation.goBack()} />
       <Gap height={10} />
-      <Profile name="Shayna Melinda" desc="Product Designer" />
+      {profile.fullName.length > 0 && (
+        <Profile
+          name={profile.fullName}
+          desc={profile.profession}
+          photo={profile.photo}
+        />
+      )}
       <Gap height={14} />
       <List
         type="next"
@@ -34,9 +87,9 @@ const UserProfile = ({navigation}: any) => {
       <List
         type="next"
         icon="help"
-        name="Help Center"
+        name="Sign Out"
         desc="Read our guidelines"
-        onPress={() => {}}
+        onPress={logOut}
       />
     </View>
   );

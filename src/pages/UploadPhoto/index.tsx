@@ -1,12 +1,12 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState} from 'react';
-import {Button, Gap, Header, Link} from '../../components';
-import {colors, fonts, storeData} from '../../utils';
-import {IconAddPhoto, IconRemovePhoto, ILNullPhoto} from '../../assets';
-import {launchImageLibrary} from 'react-native-image-picker';
-import {showMessage} from 'react-native-flash-message';
+import {CommonActions} from '@react-navigation/native';
 import {ref, update} from 'firebase/database';
+import React, {useState} from 'react';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {IconAddPhoto, IconRemovePhoto, ILNullPhoto} from '../../assets';
+import {Button, Gap, Header, Link} from '../../components';
 import {db} from '../../config';
+import {colors, fonts, showError, storeData} from '../../utils';
 
 interface UploadPhotoProps {
   navigation: any;
@@ -31,12 +31,7 @@ const UploadPhoto = ({navigation, route}: UploadPhotoProps) => {
       (response: any) => {
         console.log(response);
         if (response.didCancel || response.error) {
-          showMessage({
-            message: 'Gagal memilih foto',
-            type: 'danger',
-            backgroundColor: colors.error,
-            color: colors.white,
-          });
+          showError('Gagal Memilih Foto');
         } else {
           setDataImg(
             `data:${response.assets[0].type};base64, ${response.assets[0].base64}`,
@@ -57,7 +52,12 @@ const UploadPhoto = ({navigation, route}: UploadPhotoProps) => {
 
     storeData('user', data);
 
-    navigation.replace('MainApp');
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 1,
+        routes: [{name: 'MainApp'}],
+      }),
+    );
   };
   return (
     <View style={styles.page}>

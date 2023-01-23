@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
+import React, {useCallback, useState} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {ILNullPhoto} from '../../../assets';
 import {colors, fonts, getData} from '../../../utils';
@@ -14,15 +15,26 @@ const HomeProfile = ({onPress}: HomeProfileProps) => {
     profession: '',
   });
 
-  useEffect(() => {
-    getData('user').then(res => {
-      console.log('data user: ', res);
-      const data = res;
-      data.photo = {uri: res.photo};
-      console.log('new profile: ', data);
-      setProfile(res);
-    });
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      const unsubscribe = getData('user').then(res => {
+        const data = res;
+        data.photo = {uri: res.photo};
+        setProfile(data);
+      });
+
+      return () => unsubscribe;
+    }, []),
+  );
+
+  // useEffect(() => {
+  //   getData('user').then(res => {
+  //     const data = res;
+  //     data.photo = {uri: res.photo};
+  //     // console.log('new profile: ', data);
+  //     setProfile(res);
+  //   });
+  // }, []);
 
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>

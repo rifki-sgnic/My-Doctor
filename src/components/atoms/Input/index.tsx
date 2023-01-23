@@ -12,11 +12,18 @@ import {colors, fonts} from '../../../utils';
 interface InputProps {
   label: string;
   value: string;
-  onChangeText: any;
+  onChangeText?: any;
   secureTextEntry?: any;
+  disable?: boolean;
 }
 
-const Input = ({label, value, onChangeText, secureTextEntry}: InputProps) => {
+const Input = ({
+  label,
+  value,
+  onChangeText,
+  secureTextEntry,
+  disable,
+}: InputProps) => {
   const [border, setBorder] = useState(colors.border);
   const onFocusForm = () => {
     setBorder(colors.tertiary);
@@ -34,6 +41,8 @@ const Input = ({label, value, onChangeText, secureTextEntry}: InputProps) => {
         value={value}
         onChangeText={onChangeText}
         secureTextEntry={secureTextEntry}
+        editable={!disable}
+        selectTextOnFocus={!disable}
       />
     </View>
   );

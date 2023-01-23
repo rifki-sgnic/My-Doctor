@@ -7,8 +7,10 @@ import {auth} from '../../config';
 
 const Splash = ({navigation}: {navigation: any}) => {
   useEffect(() => {
-    setTimeout(() => {
-      onAuthStateChanged(auth, user => {
+    const unsubscribe = onAuthStateChanged(auth, user => {
+      console.log('auth: ', auth);
+      console.log('user', user);
+      setTimeout(() => {
         if (user) {
           // login
           console.log('user: ', user);
@@ -17,8 +19,9 @@ const Splash = ({navigation}: {navigation: any}) => {
           // logout
           navigation.replace('GetStarted');
         }
-      });
-    }, 3000);
+      }, 3000);
+    });
+    return () => unsubscribe();
   }, [navigation]);
   return (
     <View style={styles.page}>
