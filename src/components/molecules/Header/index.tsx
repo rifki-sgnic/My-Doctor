@@ -5,14 +5,18 @@ import {Button, Gap} from '../../atoms';
 import DarkProfile from './DarkProfile';
 
 interface HeaderProps {
-  onPress?: any;
-  title: string;
+  onPress: () => void;
   type?: string;
+  title: string;
+  desc?: string;
+  photo?: any;
 }
 
-const Header = ({onPress, title, type}: HeaderProps) => {
+const Header = ({onPress, title, desc, type, photo}: HeaderProps) => {
   if (type === 'dark-profile') {
-    return <DarkProfile onPress={onPress} />;
+    return (
+      <DarkProfile onPress={onPress} title={title} desc={desc} photo={photo} />
+    );
   }
   return (
     <View style={{...styles({type}).container}}>
@@ -57,5 +61,6 @@ const styles: StylesFunctionProps = ({type}) =>
       fontSize: 20,
       fontFamily: 'Nunito-SemiBold',
       color: type === 'dark' ? colors.white : colors.text.primary,
+      textTransform: 'capitalize',
     },
   });

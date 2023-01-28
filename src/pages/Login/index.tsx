@@ -18,7 +18,6 @@ const Login = ({navigation}: {navigation: any}) => {
   const dispatch = useAppDispatch();
 
   const login = () => {
-    console.log('form: ', form);
     dispatch(request(true));
 
     signInWithEmailAndPassword(auth, form.email, form.password)
@@ -40,7 +39,7 @@ const Login = ({navigation}: {navigation: any}) => {
             }
           })
           .catch(err => {
-            showError(err);
+            showError(err.message);
           });
       })
       .catch(err => {

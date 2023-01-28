@@ -1,18 +1,24 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
-import {DummyDoctor6} from '../../../assets';
 import {colors, fonts} from '../../../utils';
 import {Button} from '../../atoms';
 
-const DarkProfile = ({onPress}: {onPress: () => void}) => {
+interface DarkProfileProps {
+  onPress: () => void;
+  title: string;
+  desc?: string;
+  photo: any;
+}
+
+const DarkProfile = ({title, desc, photo, onPress}: DarkProfileProps) => {
   return (
     <View style={styles.container}>
       <Button type="icon-only" icon="back-light" onPress={onPress} />
       <View style={styles.content}>
-        <Text style={styles.name}>Nairobi Putri Hayza</Text>
-        <Text style={styles.desc}>Dokter Anak</Text>
+        <Text style={styles.name}>{title}</Text>
+        <Text style={styles.desc}>{desc}</Text>
       </View>
-      <Image source={DummyDoctor6} style={styles.avatar} />
+      <Image source={photo} style={styles.avatar} />
     </View>
   );
 };
@@ -52,5 +58,6 @@ const styles = StyleSheet.create({
     marginTop: 6,
     textAlign: 'center',
     color: colors.text.subtitle,
+    textTransform: 'capitalize',
   },
 });

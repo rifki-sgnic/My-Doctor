@@ -13,7 +13,7 @@ interface RatedDoctorProps {
 const RatedDoctor = ({name, desc, avatar, onPress}: RatedDoctorProps) => {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
-      <Image source={avatar} style={styles.avatar} />
+      <Image source={{uri: avatar}} style={styles.avatar} />
       <View style={styles.profile}>
         <Text style={styles.name}>{name}</Text>
         <Text style={styles.category}>{desc}</Text>
@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.primary.normal,
     color: colors.text.secondary,
     marginTop: 2,
+    textTransform: 'capitalize',
   },
   rate: {
     flexDirection: 'row',

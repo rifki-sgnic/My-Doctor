@@ -29,7 +29,6 @@ const UploadPhoto = ({navigation, route}: UploadPhotoProps) => {
         maxHeight: 200,
       },
       (response: any) => {
-        console.log(response);
         if (response.didCancel || response.error) {
           showError('Gagal Memilih Foto');
         } else {

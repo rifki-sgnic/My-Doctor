@@ -67,7 +67,6 @@ const UpdateProfile = ({navigation}: any) => {
   };
 
   const updateProfile = () => {
-    console.log('newPass: ', password);
     if (password.length > 0) {
       if (password.length < 6) {
         showError('Password harus memiliki 6 karakter');
@@ -98,7 +97,6 @@ const UpdateProfile = ({navigation}: any) => {
 
     update(ref(db, `users/${profile.uid}/`), data)
       .then(() => {
-        console.log('success');
         storeData('user', data);
         showSuccess('Data berhasil diupdate');
         navigation.dispatch(
@@ -109,7 +107,6 @@ const UpdateProfile = ({navigation}: any) => {
         );
       })
       .catch(err => {
-        console.log('error: ', err);
         showError(err);
       });
   };

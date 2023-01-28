@@ -21,7 +21,7 @@ interface ButtonProps {
 
 const Button = ({type, title, onPress, icon, disable}: ButtonProps) => {
   if (type === 'btn-icon-send') {
-    return <BtnIconSend disable={disable} />;
+    return <BtnIconSend disable={disable} onPress={onPress} />;
   }
   if (type === 'icon-only') {
     return <IconOnly icon={icon} onPress={onPress} />;

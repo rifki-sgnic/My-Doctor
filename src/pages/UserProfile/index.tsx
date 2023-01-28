@@ -26,14 +26,6 @@ const UserProfile = ({navigation}: any) => {
     }, []),
   );
 
-  // useEffect(() => {
-  //   getData('user').then(res => {
-  //     const data = res;
-  //     data.photo = {uri: res.photo};
-  //     setProfile(data);
-  //   });
-  // }, []);
-
   const logOut = () => {
     signOut(auth)
       .then(() => {
@@ -44,7 +36,6 @@ const UserProfile = ({navigation}: any) => {
             routes: [{name: 'GetStarted'}],
           }),
         );
-        // navigation.replace('GetStarted');
       })
       .catch(err => {
         showError(err.message);

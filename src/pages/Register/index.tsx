@@ -1,9 +1,11 @@
 import {createUserWithEmailAndPassword} from 'firebase/auth';
 import {ref, set} from 'firebase/database';
-import React, {useState} from 'react';
+import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import {Button, Gap, Header, Input, Loading} from '../../components';
+import {Button, Gap, Header, Input} from '../../components';
 import {auth, db} from '../../config';
+import {request} from '../../features/loadingSlice';
+import {useAppDispatch} from '../../redux/hooks';
 import {colors, showError, storeData, useForm} from '../../utils';
 
 const Register = ({navigation}: {navigation: any}) => {
@@ -14,15 +16,14 @@ const Register = ({navigation}: {navigation: any}) => {
     password: '',
   });
 
-  const [loading, setLoading] = useState(false);
+  const dispatch = useAppDispatch();
 
   const onContinue = () => {
-    console.log(form);
-    setLoading(true);
+    dispatch(request(true));
 
     createUserWithEmailAndPassword(auth, form.email, form.password)
       .then(success => {
-        setLoading(false);
+        dispatch(request(false));
         setForm('reset');
         const data = {
           fullName: form.fullName,
@@ -38,7 +39,7 @@ const Register = ({navigation}: {navigation: any}) => {
       })
       .catch(error => {
         const errorMessage = error.message;
-        setLoading(false);
+        dispatch(request(false));
         showError(errorMessage);
       });
   };
@@ -77,7 +78,6 @@ const Register = ({navigation}: {navigation: any}) => {
           </ScrollView>
         </View>
       </View>
-      {loading && <Loading />}
     </>
   );
 };

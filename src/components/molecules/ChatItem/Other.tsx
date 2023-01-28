@@ -1,19 +1,22 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import {colors, fonts} from '../../../utils';
-import {DummyDoctor6} from '../../../assets';
 
-const Other = () => {
+interface OtherProps {
+  text: string;
+  date: string;
+  photo: any;
+}
+
+const Other = ({text, date, photo}: OtherProps) => {
   return (
     <View style={styles.container}>
-      <Image source={DummyDoctor6} style={styles.avatar} />
+      <Image source={photo} style={styles.avatar} />
       <View style={styles.content}>
         <View style={styles.chatContent}>
-          <Text style={styles.text}>
-            Oh tentu saja tidak karena jeruk itu sangat sehat...
-          </Text>
+          <Text style={styles.text}>{text}</Text>
         </View>
-        <Text style={styles.date}>4.45 AM</Text>
+        <Text style={styles.date}>{date}</Text>
       </View>
     </View>
   );
@@ -35,11 +38,11 @@ const styles = StyleSheet.create({
   },
   content: {
     marginLeft: 12,
+    maxWidth: '70%',
   },
   chatContent: {
-    maxWidth: '80%',
     padding: 12,
-    paddingRight: 18,
+    marginRight: 18,
     backgroundColor: colors.cardDark,
     borderRadius: 10,
     borderBottomLeftRadius: 0,

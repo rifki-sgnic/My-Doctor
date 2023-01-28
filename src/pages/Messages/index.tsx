@@ -1,42 +1,67 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {List} from '../../components';
-import {colors, fonts} from '../../utils';
-import {DummyDoctor1, DummyDoctor2, DummyDoctor3} from '../../assets';
+import {colors, fonts, getData} from '../../utils';
+import {child, get, onValue, ref} from 'firebase/database';
+import {db} from '../../config';
 
 const Messages = ({navigation}: {navigation: any}) => {
-  const [doctors] = useState([
-    {
-      id: 1,
-      profile: DummyDoctor1,
-      name: 'Alexander Jannie',
-      desc: 'Baik ibu, terima kasih banyak atas wakt...',
-    },
-    {
-      id: 2,
-      profile: DummyDoctor2,
-      name: 'Nairobi Putri Hayza',
-      desc: 'Oh tentu saja tidak karena jeruk it...',
-    },
-    {
-      id: 3,
-      profile: DummyDoctor3,
-      name: 'John McParker Steve',
-      desc: 'Oke menurut pak dokter bagaimana unt...',
-    },
-  ]);
+  const [user, setUser] = useState({
+    uid: '',
+  });
+  const [messages, setMessages] = useState([]);
+
+  const getLocalDataUser = () => {
+    getData('user').then(res => {
+      setUser(res);
+    });
+  };
+
+  useEffect(() => {
+    getLocalDataUser();
+    const messagesRef = ref(db, `messages/${user.uid}/`);
+    const dbRef = ref(db);
+
+    return onValue(messagesRef, async snapshot => {
+      if (snapshot.exists()) {
+        const dataObj = await snapshot.val();
+        const data: any = [];
+
+        const promises = Object.keys(dataObj).map(async key => {
+          const doctorsRef = `doctors/${dataObj[key].uidPartner}`;
+          const detailDoctor = await get(child(dbRef, doctorsRef));
+          if (detailDoctor.exists()) {
+            data.push({
+              id: key,
+              detailDoctor: detailDoctor.val(),
+              ...dataObj[key],
+            });
+          }
+        });
+        Promise.all(promises).then(() => {
+          const chat = data;
+          setMessages(chat);
+        });
+      }
+    });
+  }, [user.uid]);
+
   return (
     <View style={styles.page}>
       <View style={styles.content}>
         <Text style={styles.title}>Messages</Text>
-        {doctors.map(doctor => {
+        {messages.map((chat: any) => {
+          const dataDoctor = {
+            id: chat.detailDoctor.uid,
+            data: chat.detailDoctor,
+          };
           return (
             <List
-              key={doctor.id}
-              profile={doctor.profile}
-              name={doctor.name}
-              desc={doctor.desc}
-              onPress={() => navigation.navigate('Chatting')}
+              key={chat.id}
+              profile={{uri: chat.detailDoctor.photo}}
+              name={chat.detailDoctor.fullName}
+              desc={chat.lastChatContent}
+              onPress={() => navigation.navigate('Chatting', dataDoctor)}
             />
           );
         })}
